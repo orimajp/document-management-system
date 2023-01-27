@@ -1,0 +1,6 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  // https://qiita.com/teracy164/items/0634fa1a7f24957b93e3
+  "files": ["./@types/renderer.d.ts"],
+}
