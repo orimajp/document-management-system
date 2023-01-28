@@ -18,26 +18,6 @@ const { documentFolder } = useDocumentFolder()
 const documentState = reactive({
   documents: [] as Array<DocumentItem>
 })
-/*
-watch(
-  () => documentFolder.value,
-  (newVal) => {
-    if (newVal.length > 0) {
-      documentState.documents = window.electronAPI.getDocumentList(newVal)
-      console.log(documentState.documents)
-    }
-  },
-  {
-    immediate: true, 
-  }
-)*/
-
-/*
-if (documentFolder.value.length > 0) {
-    documentState.documents = window.electronAPI.getDocumentList(documentFolder.value)
-    console.log(documentState.documents)
-}*/
-
 
 onMounted(() => {
   if (documentFolder.value.length > 0) {
@@ -48,11 +28,25 @@ onMounted(() => {
   }
 })
 
+const router = useRouter()
+const createDocument = async () => {
+  await router.push('/create/document')
+}
 </script>
 
 <template>
   <v-app>
-    <v-app-bar title="ナブバー" density="compact"></v-app-bar>
+    <v-app-bar title="ナブバー" density="compact">
+      <v-spacer></v-spacer>
+      <v-btn
+        variant="outlined"
+        color="grey"
+        @click="createDocument"
+      >
+        新規作成
+      </v-btn>
+      &nbsp;
+    </v-app-bar>
     <v-main>
       <v-container>
         <div>こんにちは</div>
@@ -67,7 +61,9 @@ onMounted(() => {
         </div>
         <div>
           <ul v-for="document in documentState.documents" :key="document.title">
-            <li>{{ document.title }}</li>
+            <li>
+              <NuxtLink :to="`/views/${document.fileName}`">{{ document.title }}</NuxtLink>
+            </li>
           </ul>
         </div>
         <br/>
