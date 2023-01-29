@@ -2,8 +2,8 @@
 
 const syncMode = ref([0])
 const splitMode = ref(1)
-//const editTitle = ref('')
-const editTitle = ref('(仮)新規作成/編集')
+const editTitle = ref('')
+//const editTitle = ref('(仮)新規作成/編集')
 //const editData = ref('')
 const editData = ref('テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。')
 const mainEl = ref<HTMLElement | null>(null)
@@ -70,6 +70,7 @@ const cancel = () => {
       v-model:editData="editData"
       v-model:syncMode="syncMode"
       v-model:splitMode="splitMode"
+      :create="true"
     />
     <v-main class="all-area" ref="mainEl">
       <div class="editor-area">

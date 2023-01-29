@@ -5,6 +5,7 @@ interface Props {
   editData?: string
   syncMode?: Array<number>
   splitMode?: number
+  create?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -12,6 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   editData: '',
   syncMode: () => [0],
   splitMode: 1,
+  create: false,
 })
 
 const emit = defineEmits<{
@@ -25,7 +27,6 @@ const editTitle = computed({
   get: () => props.editTitle,
   set: (val) => emit('update:editTitle', val)
 })
-
 
 const syncMode = computed({
   get: () => props.syncMode,
@@ -48,6 +49,7 @@ const goTop = () => {
 <template>
   <v-app-bar
    density="compact"
+   class="text-grey-darken-1"
   >
     <template v-slot:prepend>
       <v-btn icon="mdi-home" @click="goTop">
@@ -56,8 +58,9 @@ const goTop = () => {
     <v-text-field
       variant="outlined"
       density="compact"
-      placeHolder="タイトル"
+      placeHolder="タイトルを入力してください"
       v-model="editTitle"
+      :autofocus="props.create"
       class="title-field"
     />
     <v-btn-toggle
@@ -65,7 +68,7 @@ const goTop = () => {
       multiple
       variant="outlined"
       density="compact"
-      class="button-group"
+      class="button-group text-grey-darken-1"
     >
       <v-btn
         tabindex="-1"
@@ -78,7 +81,7 @@ const goTop = () => {
       mandatory
       variant="outlined"
       density="compact"
-      class="button-group"
+      class="button-group text-grey-darken-1"
     >
       <v-btn
         tabindex="-1"
