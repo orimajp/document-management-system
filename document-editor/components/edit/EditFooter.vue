@@ -1,8 +1,18 @@
 <script setup lang="ts">
+interface Props {
+  create?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  create: false,
+})
+
 const emit = defineEmits<{
   (e: 'save'): void
   (e: 'cancel'): void
 }>()
+
+const saveLabel = computed(() => props.create ? '登録' : '保存')
 
 const save = () => {
   emit('save')
@@ -25,7 +35,7 @@ const cancel = () => {
       @click="cancel"
       class="operation-button text-grey-darken-1"
     >
-      CANCEL
+      キャンセル
     </v-btn>
     <v-btn
       variant="outlined"
@@ -33,7 +43,7 @@ const cancel = () => {
       @click="save"
       class="operation-button text-grey-darken-1"
     >
-      SAVE
+      {{ saveLabel }}
     </v-btn>
   </v-footer>
 </template>

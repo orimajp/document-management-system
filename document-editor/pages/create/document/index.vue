@@ -81,6 +81,7 @@ const cancel = () => {
     <EditFooter
       @save="save"
       @cancel="cancel"
+      :create="true"
     />
   </v-app>  
 </template>
