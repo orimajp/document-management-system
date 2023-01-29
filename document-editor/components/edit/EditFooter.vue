@@ -15,7 +15,7 @@ const cancel = () => {
 
 <template>
   <v-footer
-    class="edit-footer"
+    class="edit-footer "
     app
   >
     <v-spacer></v-spacer>
@@ -23,7 +23,7 @@ const cancel = () => {
       variant="outlined"
       color="grey"
       @click="cancel"
-      class="operation-button"
+      class="operation-button text-grey-darken-1"
     >
       CANCEL
     </v-btn>
@@ -31,7 +31,7 @@ const cancel = () => {
       variant="outlined"
       color="grey"
       @click="save"
-      class="operation-button"
+      class="operation-button text-grey-darken-1"
     >
       SAVE
     </v-btn>
