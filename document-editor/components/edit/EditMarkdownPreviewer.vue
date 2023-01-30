@@ -2,20 +2,22 @@
 import { debounce } from 'lodash'
 
 interface Props {
-  renderText: string
-  height?: number
+  renderText: string,
+  isEnableScrollSync?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   renderText: '',
-  height: 0
+  isEnableScrollSync: true,
 })
+
 const viewer = ref<HTMLElement | null>(null)
 
 const { $md } = useNuxtApp()
 const renderedText = computed(() => $md.render(props.renderText))
 
-const heightPx = computed(() => `${props.height}px`)
+const { height } = useElementSize(viewer)
+const heightPx = computed(() => `${height.value}px`)
 
 const {
   addLinkCustomizeListener,
@@ -38,7 +40,8 @@ watch(
   }
 )
 
-useViewerScrollHandler(viewer)
+const isEnableScrollSync = computed(() => props.isEnableScrollSync)
+useViewerScrollHandler(viewer, isEnableScrollSync)
 </script>
 
 <template>
@@ -53,9 +56,8 @@ useViewerScrollHandler(viewer)
 <style>
 .markdown-body {
   width: 100%;
-  padding: 30px;
-/*  padding: 10px 10px 200px 10px;*/
-/*  margin-bottom: 200px;*/
-  height: v-bind(heightPx);
+  font-size: 80%;
+  padding: 15px;
+  margin-bottom: v-bind(heightPx);
 }
 </style>

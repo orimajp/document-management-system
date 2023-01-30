@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 interface Props {
   editTitle?: string
   editData?: string
@@ -37,8 +36,6 @@ const splitMode = computed({
   get: () => props.splitMode,
   set: (val) => emit('update:splitMode', val)
 })
-
-
 
 const router = useRouter()
 const goTop = () => {

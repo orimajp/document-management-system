@@ -3,13 +3,15 @@ import { debounce } from 'lodash'
 import { useContentScrollPosition } from './use-content-scroll-position'
 
 export const useViewerScrollHandler = (
-  viewer: Ref<HTMLElement | null>
+  viewer: Ref<HTMLElement | null>,
+  isEnableScrollSync: Ref<boolean>,
 ) => {
   const {
     viewerScrollPosition,
     updateEditorScrollPosition,
   } = useContentScrollPosition()
   const handleScroll = (e: Event) => {
+    if (!isEnableScrollSync.value) return
     if (isScrollRecieved) return
     const el = e.target as Element
     if (el && el.clientHeight && el.scrollHeight) {
@@ -54,7 +56,7 @@ export const useViewerScrollHandler = (
       (viewer.value as HTMLElement).scrollHeight -
       (viewer.value as HTMLElement).clientHeight
     nextTick(() => {
-      ;(viewer.value as HTMLElement).scrollTop = topEnd * v
+      (viewer.value as HTMLElement).scrollTop = topEnd * v
     })
   }
 

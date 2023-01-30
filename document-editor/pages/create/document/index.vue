@@ -7,11 +7,10 @@ const editData = ref('')
 //const editData = ref('テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。')
 const mainEl = ref<HTMLElement | null>(null)
 
-const isSyncMode = computed(() => syncMode.value.length > 0)
+const isEnableScrollSync = computed(() => syncMode.value.length > 0)
 const editorWidth = computed(() => transferWidth(splitMode.value))
 const editorWidthRatio = computed(() => `${editorWidth.value}%`)
 const previewerWidthRatio = computed(() => `${100 - editorWidth.value}%`)
-const editorWidthPx = computed(() => width.value * editorWidth.value / 100)
 
 const transferWidth = (splitMode: number): number => {
   if (splitMode === 0) return 100
@@ -19,38 +18,28 @@ const transferWidth = (splitMode: number): number => {
   return 0
 }
 
+const {
+  initializeScrollPosition,
+} = useContentScrollPosition()
+
+initializeScrollPosition()
+
 const { width, height } = useWindowSize()
-watch(
-  () => [width.value, height.value],
-  ([newWidth, newHeight]) => {
-    console.log(`width=${newWidth}, height=${newHeight}`)
-  }
-)
+const editorWidthPx = computed(() => width.value * editorWidth.value / 100)
 const contentHeight = computed(() => height.value - (48 + 48))
 const contentHeightPx = computed(() => `${contentHeight.value}px`)
 
-watch(
-  () => syncMode.value,
-  (val) => {
-    console.log(`syncMode=${val}, isSyncMode=${isSyncMode.value}`)
-  }
-)
-
-watch(
-  () => editTitle.value,
-  (val) => {
-    console.log(`editTitle=${val}`)
-  }
-)
+const router = useRouter()
 
 const save = () => {
   alert('save')
+  router.push('/')
 }
 
 const cancel = () => {
   alert('cancel')
+  router.push('/')
 }
-
 </script>
 
 <template>
@@ -67,12 +56,13 @@ const cancel = () => {
         v-model="editData"
         :width="editorWidthPx"
         :height="contentHeight"
+        :isEnableScrollSync="isEnableScrollSync"
         theme="vs-dark"
         class="editor-area"
       />
       <EditMarkdownPreviewer
         :renderText="editData"
-        :height="contentHeight"
+        :isEnableScrollSync="isEnableScrollSync"
         class="previewer-area"
       />
     </v-main>
@@ -87,18 +77,18 @@ const cancel = () => {
 <style scoped>
 .all-area {
   display: flex;
+  height: 100%;
 }
 .editor-area {
   width: v-bind(editorWidthRatio);
   height: v-bind(contentHeightPx);
   background-color: black;
-/*  height: 100%;*/
 }
 .previewer-area {
   width: v-bind(previewerWidthRatio);
   height: v-bind(contentHeightPx);
   overflow: auto;
-  background-color: black;
-/*  height: 100%;*/
+/*  background-color: black;*/
+  background-color: #0d1117;
 }
 </style>

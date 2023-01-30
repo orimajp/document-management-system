@@ -13,12 +13,14 @@ interface Props {
   height?: number
   modelValue: string
   theme?: string
+  isEnableScrollSync?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: 0,
   height: 0,
   theme: 'vs',
+  isEnableScrollSync: true,
 })
 
 const emit = defineEmits(['editorWillMount', 'editorDidMount', 'change', 'update:modelValue'])
@@ -28,12 +30,15 @@ const editorElement = ref<HTMLElement | null>(null)
 const styleWidth = computed(() => `${props.width}px`)
 const styleHeight = computed(() => `${props.height}px`)
 
+watch(
+  () => [props.width, props.height],
+  ([newWidth, newHeight]) => {
+    editor.layout({ width: newWidth, height: newHeight })
+  }
+)
+
 const resizeEditor = () => {
   if (editor && editorElement.value) {
-    /*
-    const rect = (editorElement.value as Element).getBoundingClientRect()
-    editor.layout({ width: rect.width, height: rect.height })
-    */
     editor.layout({ width: props.width, height: props.height })
   }
 }
@@ -61,9 +66,10 @@ watch(
 )
 
 const height = computed(() => props.height)
+const isEnableScrollSync = computed(() => props.isEnableScrollSync)
 const {
-  setEditor
-} = useEditorScrollHandler(height)
+  setEditor,
+} = useEditorScrollHandler(height, isEnableScrollSync)
 
 const initMonaco = async () => {
   const loader = await import('@monaco-editor/loader').then(m => m?.default)

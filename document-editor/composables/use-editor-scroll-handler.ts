@@ -5,35 +5,20 @@ import { debounce } from 'lodash'
 import { useContentScrollPosition } from './use-content-scroll-position'
 
 export const useEditorScrollHandler = (
-  windowHeight: Ref<number>
+  windowHeight: Ref<number>,
+  isEnableScrollSync: Ref<boolean>,
 ) => {
   let editor: IStandaloneCodeEditor | null = null
   let isScrollRecieved = false
 
   const {
     editorScrollPosition,
-//    viewerScrollPosition,
     updateViewerScrollPosition,
   } = useContentScrollPosition()
 
-  /*
-  watch(
-    () => editorScrollPosition.value,
-    (val) => {
-      console.log(`editorScrollPosition=${val}`)
-    }
-  )
-
-  watch(
-    () => viewerScrollPosition.value,
-    (val) => {
-      console.log(`viewerScrollPosition=${val}`)
-    }
-  )
-  */
-
   const handleScroll = () => {
     if (!editor) return
+    if (!isEnableScrollSync.value) return
     if (isScrollRecieved) return
     const scrollTop = editor.getScrollTop()
     const topEnd = editor.getScrollHeight() - windowHeight.value
