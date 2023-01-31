@@ -8,14 +8,19 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  (e: 'save'): void
+  (e: 'register'): void
+  (e: 'update'): void
   (e: 'cancel'): void
 }>()
 
 const saveLabel = computed(() => props.create ? '登録' : '保存')
 
 const save = () => {
-  emit('save')
+  if (props.create) {
+    emit('register')
+  } else {
+    emit('update')
+  }
 }
 
 const cancel = () => {
