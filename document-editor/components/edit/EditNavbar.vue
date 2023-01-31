@@ -103,6 +103,7 @@ const goTop = () => {
 .title-field {
   margin-top: 20px;
   margin-right: 8px;
+  margin-left: 5px;
 }
 .button-group {
   margin-right: 8px;
