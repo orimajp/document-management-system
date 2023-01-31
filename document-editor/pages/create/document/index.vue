@@ -31,8 +31,8 @@ const contentHeightPx = computed(() => `${contentHeight.value}px`)
 
 const router = useRouter()
 
-const save = () => {
-  alert('save')
+const register = () => {
+  alert('register')
   router.push('/')
 }
 
@@ -67,7 +67,7 @@ const cancel = () => {
       />
     </v-main>
     <EditFooter
-      @save="save"
+      @register="register"
       @cancel="cancel"
       :create="true"
     />
