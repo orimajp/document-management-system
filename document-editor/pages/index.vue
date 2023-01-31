@@ -4,7 +4,6 @@ import { DocumentItem } from '~~/models/document-item';
 const iDs = ref([1,2,3])
 
 const openFile = async () => {
-
   const result = await window.electronAPI.openFile()
   if (result) {
     const { filePath, textData } = result
@@ -49,6 +48,7 @@ const createDocument = async () => {
     </v-app-bar>
     <v-main>
       <v-container>
+        <!--
         <div>こんにちは</div>
         <v-btn @click="openFile">開く</v-btn>
         <ul v-for="id in iDs" :key="id">
@@ -56,6 +56,7 @@ const createDocument = async () => {
             <NuxtLink :to="`/views/${id}`">ドキュメント{{ id }}</NuxtLink>
           </li>
         </ul>
+        -->
         <div>
           <p>ドキュメントフォルダ： [{{ documentFolder }}]</p>
         </div>
