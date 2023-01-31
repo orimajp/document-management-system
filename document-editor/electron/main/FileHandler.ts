@@ -18,7 +18,7 @@ export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): 
 }
 
 const toDocumentItem = (fileName: string): DocumentItem => {
-  return { title: fileName, fileName: fileName }
+  return { title: fileName, id: fileName, createdAt: '2000/01/01 00:00', updatedAt: '2020/01/01 00:00' }
 }
 
 // TODO ドキュメント新規保存
