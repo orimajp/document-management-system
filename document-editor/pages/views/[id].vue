@@ -1,50 +1,35 @@
 <script setup lang="ts">
 const route = useRoute()
 console.log(`parameter:${route.params.id}`)
-const id = computed(() => route.params.id as string)
+const id = route.params.id as string
+
+const title = ref('ダミータイトル') // TODO データからタイトルをセット
+const documentData = ref('ダミーデータ')
+
+console.log(`表示ID: ${id}`)
 
 const router = useRouter()
 const createPage = () => {
-  router.push(`/create/page/${id.value}`)
+  router.push(`/create/page/${id}`)
 }
 const editDocument = () => {
-  router.push(`/edit/${id.value}`)
+  router.push(`/edit/${id}`)
 }
 const editTree = () => {
-  router.push(`/tree/${id.value}`)
+  router.push(`/tree/${id}`)
 }
 </script>
 
 <template>
   <v-app>
-    <v-app-bar title="ナブバー" density="compact">
-      <v-spacer></v-spacer>
-      <v-btn
-        variant="outlined"
-        color="grey"
-        @click="createPage"
-      >
-        ページ作成
-      </v-btn>
-      <v-btn
-        variant="outlined"
-        color="grey"
-        @click="editDocument"
-        class="button"
-      >
-        ページ編集
-      </v-btn>
-      <v-btn
-        variant="outlined"
-        color="grey"
-        @click="editTree"
-        class="button"
-      >
-        階層編集
-      </v-btn>
-    </v-app-bar>
+    <ViewNavbar
+      :document-title="title"
+      @create-page="createPage"
+      @edit-document="editDocument"
+      @edit-tree="editTree"
+    />
     <v-navigation-drawer
-    permanent
+      permanent
     >
       <v-list density="compact" nav>
         <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
@@ -53,21 +38,10 @@ const editTree = () => {
     </v-navigation-drawer>
     <v-main>
       <v-container>
-        <h1>ビューページ</h1>
-        <div>
-          <p>parameter: {{ $route.params.id }}  </p>
-        </div>
-        <div>
-          <NuxtLink :to="`/create/page/${id}`">ページ作成</NuxtLink>
-        </div>
-        <NuxtLink to="/">トップへ</NuxtLink>
+        <ViewMarkDownPreviewer
+          :render-text="documentData"
+        />
       </v-container>
     </v-main>
   </v-app>
 </template>
-
-<style scoped>
-.button {
-  margin-left: 8px;
-}
-</style>
