@@ -7,16 +7,13 @@ const editData = ref('')
 //const editData = ref('テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。テストデータ。')
 const mainEl = ref<HTMLElement | null>(null)
 
+const {
+  editorWidth,
+} = useEditorWidth(splitMode)
+
 const isEnableScrollSync = computed(() => syncMode.value.length > 0)
-const editorWidth = computed(() => transferWidth(splitMode.value))
 const editorWidthRatio = computed(() => `${editorWidth.value}%`)
 const previewerWidthRatio = computed(() => `${100 - editorWidth.value}%`)
-
-const transferWidth = (splitMode: number): number => {
-  if (splitMode === 0) return 100
-  if (splitMode === 1) return 50
-  return 0
-}
 
 const {
   initializeScrollPosition,

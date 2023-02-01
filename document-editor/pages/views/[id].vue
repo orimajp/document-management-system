@@ -4,11 +4,14 @@ console.log(`parameter:${route.params.id}`)
 const id = computed(() => route.params.id as string)
 
 const router = useRouter()
-const editDocument = async () => {
-  await router.push(`/edit/${id.value}`)
+const createPage = () => {
+  router.push(`/create/page/${id.value}`)
 }
-const editTree = async () => {
-  await router.push(`/tree/${id.value}`)
+const editDocument = () => {
+  router.push(`/edit/${id.value}`)
+}
+const editTree = () => {
+  router.push(`/tree/${id.value}`)
 }
 </script>
 
@@ -19,15 +22,23 @@ const editTree = async () => {
       <v-btn
         variant="outlined"
         color="grey"
+        @click="createPage"
+      >
+        ページ作成
+      </v-btn>
+      <v-btn
+        variant="outlined"
+        color="grey"
         @click="editDocument"
+        class="button"
       >
         ページ編集
       </v-btn>
-      &nbsp;
       <v-btn
         variant="outlined"
         color="grey"
         @click="editTree"
+        class="button"
       >
         階層編集
       </v-btn>
@@ -54,3 +65,9 @@ const editTree = async () => {
     </v-main>
   </v-app>
 </template>
+
+<style scoped>
+.button {
+  margin-left: 8px;
+}
+</style>
