@@ -13,7 +13,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const saveLabel = computed(() => props.create ? '登録' : '保存')
+const saveLabel = computed(() => props.create ? '登録' : '更新')
 
 const save = () => {
   if (props.create) {

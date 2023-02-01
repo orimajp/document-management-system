@@ -1,7 +1,6 @@
 <script setup lang="ts">
 interface Props {
   editTitle?: string
-  editData?: string
   syncMode?: Array<number>
   splitMode?: number
   create?: boolean
@@ -9,7 +8,6 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   editTitle: '',
-  editData: '',
   syncMode: () => [0],
   splitMode: 1,
   create: false,
@@ -17,7 +15,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'update:editTitle', text: string): void
-  (e: 'update:editData', text: string): void
   (e: 'update:syncMode', num: Array<number> ): void
   (e: 'update:splitMode', num: number): void
 }>()

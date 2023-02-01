@@ -14,6 +14,7 @@ interface Props {
   modelValue: string
   theme?: string
   isEnableScrollSync?: boolean
+  create?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 0,
   theme: 'vs',
   isEnableScrollSync: true,
+  create: false,
 })
 
 const emit = defineEmits(['editorWillMount', 'editorDidMount', 'change', 'update:modelValue'])
@@ -51,12 +53,21 @@ let editor: monaco.editor.IStandaloneCodeEditor
 onMounted(() => {
   initMonaco()
   window.addEventListener('resize', debouncedResizeEditor)
+  if (!props.create) {
+    nextTick(() => {
+      setTimeout(() => focus(), 500)
+    })
+  }
 })
 
 onBeforeUnmount(() => {
   editor && editor.dispose()
   window.removeEventListener('resize', debouncedResizeEditor)
 })
+
+const focus = () => {
+  editor?.focus()
+}
 
 watch(
   () => props.modelValue,
