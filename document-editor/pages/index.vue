@@ -29,6 +29,8 @@ onMounted(() => {
       loading.value = false
       empty.value = documentState.documents.length === 0
     })
+  } else {
+    router.push('/initialize')
   }
 })
 
@@ -77,9 +79,11 @@ const createDocument = async () => {
         <div>
           <p>ドキュメントフォルダ： [{{ documentFolder }}]</p>
         </div>
+        <!--
         <div>
           <NuxtLink to="/initialize">初期化</NuxtLink>
         </div>
+        -->
         <br/>
         <ListDocumentList
           v-if="exists"

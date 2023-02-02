@@ -29,10 +29,12 @@ const selectDirectory = async () => {
         <div class="button-area">
           <v-btn @click="selectDirectory">ドキュメントフォルダ選択</v-btn>
         </div>
+        <!--
         <div>
           <br/>
           <NuxtLink to="/">トップへ</NuxtLink>
         </div>
+        -->
       </v-container>
     </v-main>
   </v-app>
