@@ -16,7 +16,7 @@ const goViewPage = (id: string) => {
 </script>
 
 <template>
-  <v-table>
+  <v-table class="document-table">
     <thead>
       <tr>
         <th class="text-left">
@@ -46,6 +46,9 @@ const goViewPage = (id: string) => {
 </template>
 
 <style scoped>
+.document-table tr:hover td {
+  background-color: #424242;
+}
 .document-list {
   cursor: pointer;
 }
