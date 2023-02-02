@@ -52,7 +52,6 @@ watch(
 .markdown-body {
   width: 100%;
   font-size: 80%;
-  padding: 15px;
   margin-bottom: v-bind(heightPx);
 }
 </style>

@@ -35,7 +35,9 @@ const goTop = () => {
       <v-btn icon="mdi-home" @click="goTop">
       </v-btn>
     </template>
-    <v-app-bar-title>
+    <v-app-bar-title
+      class="title"
+    >
       {{ props.documentTitle }}
     </v-app-bar-title>
     <v-spacer></v-spacer>
@@ -66,7 +68,11 @@ const goTop = () => {
 </template>
 
 <style scoped>
+.title {
+  font-size: 90%;
+}
 .button {
   margin-left: 8px;
+  width: 100px;
 }
 </style>
