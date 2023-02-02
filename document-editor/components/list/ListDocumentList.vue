@@ -46,6 +46,9 @@ const goViewPage = (id: string) => {
 </template>
 
 <style scoped>
+.document-table {
+  font-size: 80%;
+}
 .document-table tr:hover td {
   background-color: #424242;
 }
