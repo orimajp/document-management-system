@@ -1,35 +1,49 @@
 <script setup lang="ts">
-import { DocumentItem } from '~~/models/document-item';
-
 const { documentFolder } = useDocumentFolder()
-/*
-const documentState = reactive({
-  documents: [] as Array<DocumentItem>
-})*/
+const router = useRouter()
 
 const selectDirectory = async () => {
   const result = await window.electronAPI.selectDirectory()
   if (result) {
     const { dirPath } = result
     console.log(`dirPath=${dirPath}`)
-//    documentState.documents = window.electronAPI.getDocumentList(dirPath)
-//    console.log(documentState.documents)
     documentFolder.value = dirPath
+    router.push('/')
   } else {
     console.log('not selected.')
   }
 }
-
 </script>
 
 <template>
   <v-app>
-    <v-container>
-      <h1>初期化</h1>
-      <v-btn @click="selectDirectory">ドキュメントフォルダ選択</v-btn>
-      <div>
-        <NuxtLink to="/">トップへ</NuxtLink>
-      </div>
-    </v-container>
+    <v-main>
+      <v-container>
+        <v-alert
+          type="info"
+          variant="outlined"
+          class="alert-area"
+        >
+          ドキュメントフォルダを選択してください。
+        </v-alert>
+        <div class="button-area">
+          <v-btn @click="selectDirectory">ドキュメントフォルダ選択</v-btn>
+        </div>
+        <div>
+          <br/>
+          <NuxtLink to="/">トップへ</NuxtLink>
+        </div>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
+
+<style scoped>
+.alert-area {
+  margin-top: 50px;
+}
+.button-area {
+  margin-top: 30px;
+  text-align: center;
+}
+</style>

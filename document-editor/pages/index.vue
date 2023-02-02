@@ -36,15 +36,14 @@ const router = useRouter()
 const createDocument = async () => {
   await router.push('/create/document')
 }
-
-const goViewPage = (id: string) => {
-  router.push(`/views/${id}`)
-}
 </script>
 
 <template>
   <v-app>
-    <v-app-bar title="ナブバー" density="compact">
+    <v-app-bar density="compact">
+      <v-app-bar-title>
+        ドキュメント一覧
+      </v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn
         variant="outlined"
@@ -57,9 +56,15 @@ const goViewPage = (id: string) => {
     </v-app-bar>
     <v-main>
       <v-container>
-        <h1>ドキュメント一覧</h1>
-        <div v-if="loading" class="text-center">
-          <v-progress-circular :size="100" color="primary" indeterminate />
+        <div
+          v-if="loading"
+          class="text-center"
+        >
+          <v-progress-circular
+            :size="100"
+            color="primary"
+            indeterminate
+          />
         </div>
         <v-alert
           v-if="empty"
@@ -69,40 +74,18 @@ const goViewPage = (id: string) => {
         >
           ドキュメントがありません。
         </v-alert>
-        <v-table v-if="exists">
-          <thead>
-            <tr>
-              <th class="text-left">
-                ドキュメント名
-              </th>
-              <th class="text-left">
-                作成日時
-              </th>
-              <th class="text-left">
-                更新日時
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="document in documentState.documents"
-              :key="document.title"
-              @click="goViewPage(document.id)"
-              class="document-list"
-            >
-              <td>{{ document.title }}</td>
-              <td>{{ document.createdAt }}</td>
-              <td>{{ document.updatedAt }}</td>
-            </tr>
-          </tbody>    
-        </v-table>
-        <br/>
         <div>
           <p>ドキュメントフォルダ： [{{ documentFolder }}]</p>
         </div>
         <div>
           <NuxtLink to="/initialize">初期化</NuxtLink>
         </div>
+        <br/>
+        <ListDocumentList
+          v-if="exists"
+          :documents="documentState.documents"
+          class="document-list"
+        />
       </v-container>
     </v-main>
   </v-app>
@@ -113,6 +96,6 @@ const goViewPage = (id: string) => {
   margin-top: 20px;
 }
 .document-list {
-  cursor: pointer;
+  margin-bottom: 50px;
 }
 </style>
