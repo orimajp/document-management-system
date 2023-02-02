@@ -24,10 +24,10 @@ const selectDirectory = async () => {
           variant="outlined"
           class="alert-area"
         >
-          ドキュメントフォルダを選択してください。
+          ドキュメント格納フォルダを選択してください。
         </v-alert>
         <div class="button-area">
-          <v-btn @click="selectDirectory">ドキュメントフォルダ選択</v-btn>
+          <v-btn @click="selectDirectory">フォルダ選択</v-btn>
         </div>
         <!--
         <div>
