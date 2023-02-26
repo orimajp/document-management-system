@@ -5,6 +5,7 @@ export interface IElectronAPI {
   selectDirectory: () => Promise<{ dirPath: string }>,
   selectDirectory: () => Promise<{ dirPath: string }>,
   getDocumentList: (filePath: string) => Array<DocumentItem>,
+  noticeDirty: (dirty: boolean) => void,
 }
 
 declare global {

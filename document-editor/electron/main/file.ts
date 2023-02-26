@@ -1,7 +1,9 @@
 import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
+import { CreateDocumentParam, DocumentData } from '~~/models/document'
 import { DocumentItem } from '~~/models/document-item'
+import { MenuData } from '~~/models/menu'
 
 
 export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): Array<DocumentItem> => {
@@ -21,16 +23,6 @@ const toDocumentItem = (fileName: string): DocumentItem => {
   return { title: fileName, id: fileName, createdAt: '2000/01/01 00:00', updatedAt: '2020/01/01 00:00' }
 }
 
-// TODO ドキュメント新規保存
-// * 格納フォルダ作成(ドキュメントID)
-// * index.json作成
-// * menu.json作成
-// * ドキュメントフォルダ作成(ページID)
-// * content.md作成
-
-// TODO ドキュメント更新
-
-// TODO ドキュメント削除
 
 // TODO ページ作成
 

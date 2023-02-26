@@ -2,6 +2,8 @@
 const editTitle = ref('')
 const editData = ref('')
 
+useConfirmUnload()
+
 const router = useRouter()
 
 const register = () => {

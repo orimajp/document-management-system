@@ -3,7 +3,8 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import path from 'path'
 import fs from 'fs'
-import {getDocumentList} from './FileHandler'
+import {getDocumentList} from './file'
+import { createMenu } from './menu'
 
 // The built directory structure
 //
@@ -16,7 +17,9 @@ import {getDocumentList} from './FileHandler'
 // │ │ └── index.html
 
 process.env.ROOT = path.join(__dirname, '../..')
+//process.env.ROOT = path.join(__dirname, '..')
 process.env.DIST = path.join(process.env.ROOT, 'dist-electron')
+//process.env.DIST = path.join(process.env.ROOT, 'electron')
 process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? path.join(process.env.ROOT, 'public')
   : path.join(process.env.ROOT, '.output/public')
@@ -24,6 +27,16 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 const preload = path.join(process.env.DIST, 'preload.js')
 
+const dirtyMap = new Map<BrowserWindow, boolean>()
+
+// https://teratail.com/questions/189438
+const option = {
+  type: "warning",
+  buttons: ["キャンセル", "終了する"],
+  defaultId: 0,
+  title: "閉じるボタンが押されました",
+  message: "ファイルは保存しましたか？していなければキャンセルを押して下さい。"
+}
 
 const bootstrap = () => {
   const win = new BrowserWindow({
@@ -34,19 +47,37 @@ const bootstrap = () => {
     }
   })
 
+  ipcMain.on('notice-dirty', (event, dirty) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    if (win) {
+      dirtyMap.set(win, dirty)
+    }
+  })
+
   if (process.env.VITE_DEV_SERVER_URL) {
-    /*
-    const serverUrl = process.env.VITE_DEV_SERVER_URL
-    setTimeout(() => {
-      win.loadURL(serverUrl)
-      win.webContents.openDevTools()
-    }, 10000)
-    */
     win.loadURL(process.env.VITE_DEV_SERVER_URL)
     win.webContents.openDevTools()
   } else {
     win.loadFile(path.join(process.env.VITE_PUBLIC!, 'index.html'))
   }
+
+  win.on('close', (e) => {
+    //@ts-ignore
+    const win = e.sender
+    const dirty = dirtyMap.get(win)
+    if (process.env.VITE_DEV_SERVER_URL || !dirty) {
+      dirtyMap.delete(win)
+      return
+    }
+    const num = dialog.showMessageBoxSync(option)
+    if (num === 0) {
+      e.preventDefault()
+    } else {
+      dirtyMap.delete(win)
+    }
+  })
+
   win.on('resize', () => {
     const size =  win.getSize()
     const width = size[0]
@@ -64,9 +95,44 @@ app.whenReady().then(() => {
   })
 })
 
+/**
+ * ウィンドウ前クローズ
+ */
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+/**
+ * 新規ウィンドウ作成
+ */
+const createWindowFunc = () => {
+  console.log('createWindw menu click')
+  bootstrap()
+}
+
+
+const openFileFunc = async () => {
+  console.log('openFile menu click')
+//  const result = await openFile()
+//  const win = BrowserWindow.getFocusedWindow() as BrowserWindow
+//  win.webContents.send('read-file', result)
+}
+
+const saveFileFunc = () => {
+  console.log('saveFile menu click')
+
+  // TODO 書き込み処理(非同期が絡むとシーケンシャルな処理にはならない可能性がある)
+  // * レンダープロセスにデータ取得依頼
+  const win = BrowserWindow.getFocusedWindow() as BrowserWindow
+  win.webContents.send('get-data')
+}
+
+createMenu(createWindowFunc, openFileFunc, saveFileFunc)
+
+
+
+
+
 
 
 /**

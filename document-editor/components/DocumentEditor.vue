@@ -37,10 +37,38 @@ console.log(`編集モード： ${ props.create ? '作成' : '更新' }`)
 const syncMode = ref([0])
 const splitMode = ref(1)
 const mainEl = ref<HTMLElement | null>(null)
+const saveTitle = ref('')
+
+const {
+  clearDirtyState,
+  initilizeTitleDirtyState,
+  updateTitleDirtyState,
+} = useDirtyState()
+
+onMounted(() => {
+  saveTitle.value = props.editTitle
+  initilizeTitleDirtyState()
+})
+
+watch(
+  () => props.editTitle,
+  (newVal) => {
+    updateTitleDirtyState(newVal !== saveTitle.value)
+  }
+)
 
 const {
   editorWidth,
 } = useEditorWidth(splitMode)
+
+const {
+  changeDelayState,
+} = useScrollDelay()
+
+watch(
+  () => splitMode.value,
+  () => changeDelayState()
+)
 
 const isEnableScrollSync = computed(() => syncMode.value.length > 0)
 const editorWidthRatio = computed(() => `${editorWidth.value}%`)
@@ -59,16 +87,19 @@ const contentHeightPx = computed(() => `${contentHeight.value}px`)
 
 const register = () => {
   alert('register')
+  clearDirtyState()
   emit('register')
 }
 
 const update = () => {
   alert('update')
+  clearDirtyState()
   emit('update')
 }
 
 const cancel = () => {
   alert('cancel')
+  // TODO dirtyチェック
   emit('cancel')
 }
 </script>

@@ -21,7 +21,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getDocumentList: (folderPath: string) => {
       const result = ipcRenderer.invoke('getDocumentList', folderPath)
       return result
-    }
+    },
 
+    noticeDirty: (dirty: boolean) => ipcRenderer.send('notice-dirty', dirty),
 
 })

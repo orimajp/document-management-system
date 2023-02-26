@@ -32,6 +32,26 @@ const editorElement = ref<HTMLElement | null>(null)
 const styleWidth = computed(() => `${props.width}px`)
 const styleHeight = computed(() => `${props.height}px`)
 
+const {
+  isDirty,
+  initilizeVersionId,
+  updateCurrentVersionId,
+} = useDirtyState()
+
+const {
+  initDirtyState,
+} = useNotifyDirtyState(isDirty)
+
+watch(
+  () => props.modelValue,
+  () => {
+    const versionId = getVersionId()
+    if (versionId) {
+      updateCurrentVersionId(versionId)
+    }
+  }
+)
+
 watch(
   () => [props.width, props.height],
   ([newWidth, newHeight]) => {
@@ -91,10 +111,17 @@ const initMonaco = async () => {
     language: 'markdown',
     theme: props.theme,
     wordWrap: 'on',
+    occurrencesHighlight: false,
+    quickSuggestions: false,
   })
 
   if (editor) {
     setEditor(editor)
+    const versionId = getVersionId()
+    if (versionId) {
+      initilizeVersionId(versionId)
+      initDirtyState()
+    }
     editor.onDidChangeModelContent((event) => {
       const value = editor.getValue()
       if( props.modelValue != value) {
@@ -114,6 +141,13 @@ const setValue = (value: string) => {
 const getValue = () => {
   if (!editor) return ''
   return (editor as monaco.editor.IStandaloneCodeEditor).getValue()
+}
+
+const getVersionId = () => {
+  if (!editor) return 1
+  const model = (editor as monaco.editor.IStandaloneCodeEditor).getModel()
+  if (!model) return 1
+  return model.getAlternativeVersionId()
 }
 </script>
 

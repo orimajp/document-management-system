@@ -34,6 +34,9 @@ const splitMode = computed({
   set: (val) => emit('update:splitMode', val)
 })
 
+const { isDirty } = useDirtyState()
+// TODO このフラグをどう使うか要検討
+
 const router = useRouter()
 const goTop = () => {
   router.push('/')
@@ -43,7 +46,7 @@ const goTop = () => {
 <template>
   <v-app-bar
    density="compact"
-   class="text-grey-darken-1"
+   class="text-grey-darken-1 navbar-area"
   >
     <template v-slot:prepend>
       <v-btn icon="mdi-home" @click="goTop">
@@ -97,12 +100,17 @@ const goTop = () => {
 </template>
 
 <style scoped>
+.navbar-area {
+  -webkit-app-region: drag
+}
 .title-field {
   margin-top: 20px;
   margin-right: 8px;
   margin-left: 5px;
+  -webkit-app-region: no-drag;
 }
 .button-group {
   margin-right: 8px;
+  -webkit-app-region: no-drag;
 }
 </style>

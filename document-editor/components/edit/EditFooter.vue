@@ -15,6 +15,9 @@ const emit = defineEmits<{
 
 const saveLabel = computed(() => props.create ? '登録' : '更新')
 
+const { isDirty } = useDirtyState()
+// TODO このフラグをどう使うか要検討
+
 const save = () => {
   if (props.create) {
     emit('register')

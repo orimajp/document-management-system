@@ -2,6 +2,8 @@
 const editTitle = ref('')
 const editData = ref('')
 
+useConfirmUnload()
+
 const route  = useRoute()
 const id = route.params.id as string
 console.log(`ページ追加対象ドキュメントID=${id}`)

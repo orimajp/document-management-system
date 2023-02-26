@@ -2,6 +2,8 @@
 const editTitle = ref('')
 const editData = ref('')
 
+useConfirmUnload()
+
 const route = useRoute()
 console.log(`parameter:${route.params.id}`)
 const id = route.params.id as string
