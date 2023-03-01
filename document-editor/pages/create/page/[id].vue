@@ -4,6 +4,10 @@ const editData = ref('')
 
 useConfirmUnload()
 
+const {
+  clearDirtyState,
+} = useDirtyState()
+
 const route  = useRoute()
 const id = route.params.id as string
 console.log(`ページ追加対象ドキュメントID=${id}`)
@@ -15,8 +19,9 @@ const register = () => {
   router.push(`/views/${id}`)
 }
 
-const cancel = () => {
-  router.push(`/views/${id}`)
+const cancel = async () => {
+  await router.push(`/views/${id}`)
+  clearDirtyState()
 }
 </script>
 

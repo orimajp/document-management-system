@@ -86,20 +86,16 @@ const contentHeight = computed(() => height.value - (48 + 48))
 const contentHeightPx = computed(() => `${contentHeight.value}px`)
 
 const register = () => {
-  alert('register')
   clearDirtyState()
   emit('register')
 }
 
 const update = () => {
-  alert('update')
   clearDirtyState()
   emit('update')
 }
 
 const cancel = () => {
-  alert('cancel')
-  // TODO dirtyチェック
   emit('cancel')
 }
 </script>

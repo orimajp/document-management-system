@@ -4,6 +4,10 @@ const editData = ref('')
 
 useConfirmUnload()
 
+const {
+  clearDirtyState,
+} = useDirtyState()
+
 const router = useRouter()
 
 const register = () => {
@@ -11,8 +15,10 @@ const register = () => {
   router.push('/')
 }
 
-const cancel = () => {
-  router.push('/')
+const cancel = async () => {
+  await router.push('/')
+  // TODO 作成済みの場合はディレクトリごと削除
+  clearDirtyState()
 }
 </script>
 

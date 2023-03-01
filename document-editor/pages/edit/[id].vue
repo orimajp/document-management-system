@@ -4,6 +4,10 @@ const editData = ref('')
 
 useConfirmUnload()
 
+const {
+  clearDirtyState,
+} = useDirtyState()
+
 const route = useRoute()
 console.log(`parameter:${route.params.id}`)
 const id = route.params.id as string
@@ -17,8 +21,9 @@ const update = () => {
   router.push(`/views/${id}`)
 }
 
-const cancel = () => {
-  router.push(`/views/${id}`)
+const cancel = async () => {
+  await router.push(`/views/${id}`)
+  clearDirtyState()
 }
 </script>
 
