@@ -24,7 +24,7 @@
     "@vueuse/core": "^9.13.0",
     "@vueuse/nuxt": "^9.13.0",
     "cross-env": "^7.0.3",
-    "electron": "^23.1.1",
+    "electron": "^23.1.2",
     "electron-builder": "^23.6.0",
     "fs-extra": "^11.1.0",
     "github-markdown-css": "^5.2.0",
