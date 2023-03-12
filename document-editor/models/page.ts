@@ -1,5 +1,5 @@
 export interface CreatePageParam {
-  directory: string
+  folder: string
   documentId: string
   pageId: string
   title: string
@@ -8,7 +8,7 @@ export interface CreatePageParam {
 }
 
 export interface UpdatePageParam {
-  directory: string
+  folder: string
   documentId: string
   pageId: string
   title: string
@@ -18,21 +18,31 @@ export interface UpdatePageParam {
 }
 
 export interface DeletePageParam {
-  directory: string
+  folder: string
   documentId: string
   pageId: string
 }
 
 export interface GetPageInfoParam {
-  directory: string
+  folder: string
   documentId: string
   pageId: string
 }
 
 export interface PageInfo {
+  /*
   title: string
   data: string
   createdAt: string
   updatedAt: string
+  */
+  documentId: string
+  pageId: string
+  title: string
+  data: string
+  createdAt: number
+  updatedAt: number
+  temp?: boolean
+  delete?: boolean
 }
 

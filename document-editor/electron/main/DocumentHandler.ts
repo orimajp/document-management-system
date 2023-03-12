@@ -1,8 +1,8 @@
 import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
-import { CreateDocumentParam, DocumentData } from '~~/models/document'
-import { MenuData } from '~~/models/menu'
+import { CreateDocumentParam } from '~~/models/document'
+//import { MenuData } from '~~/models/menu'
 
 // TODO ドキュメント新規保存
 // * 格納フォルダ作成(ドキュメントID)
@@ -12,23 +12,25 @@ import { MenuData } from '~~/models/menu'
 // * content.md作成
 const createDocument = (param: CreateDocumentParam) => {
   // index.jsonデータ作成
+  /*
   const index: DocumentData = {
     documentId: param.documentId,
     title: param.title,
     createdAt: param.createdAt,
     updatedAt: param.createdAt,
-  }
+  }*/
 
   // menu.jsoデータ作成
+  /*
   const menu: MenuData = {
     title: param.title,
     id: param.documentId,
     menus: [],
-  }
+  }*/
 
   // 作成パス
   // TODO 環境依存のパス区切り文字に置換
-  const createDirectoryPath = `${param.directory}/${param.documentId}`
+  const createDirectoryPath = `${param.folder}/${param.documentId}`
   const indexPath = `${createDirectoryPath}/index.json`
   const menuPath = `${createDirectoryPath}/menu.json`
   const documentPath = `${createDirectoryPath}/${param.documentId}/contentmd`

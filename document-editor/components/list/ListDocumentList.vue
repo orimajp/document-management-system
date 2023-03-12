@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const router = useRouter()
 const goViewPage = (id: string) => {
-  router.push(`/views/${id}`)
+  router.push(`/views/${id}/${id}`)
 }
 </script>
 

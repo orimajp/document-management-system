@@ -8,10 +8,15 @@ const {
   clearDirtyState,
 } = useDirtyState()
 
+const {
+  createDocument,
+} = useDocument()
+
 const router = useRouter()
 
-const register = () => {
+const register = async () => {
   // TODO 作成したドキュメントへ遷移
+  await createDocument(editTitle.value, editData.value)
   router.push('/')
 }
 

@@ -1,22 +1,41 @@
 <script setup lang="ts">
 const route = useRoute()
-console.log(`parameter:${route.params.id}`)
-const id = route.params.id as string
+const documentId = route.params.documentId as string
+const pageId = route.params.pageId as string
+console.log(`documetnId=${documentId}, pageId=${pageId}`)
+//console.log(`parameter:${route.params.id}`)
+//const id = route.params.id as string
 
 const title = ref('ダミータイトル') // TODO データからタイトルをセット
 const documentData = ref('ダミーデータ')
 
-console.log(`表示ID: ${id}`)
+const {
+  getPageInfo,
+} = usePage()
+
+const content = await getPageInfo(documentId, pageId)
+console.log(content)
+
+if (!content) {
+  title.value = '未発見'
+  documentData.value = ''
+} else {
+  title.value = content.title
+  documentData.value = content.data
+}
+
+
+console.log(`表示ドキュメントID=${documentId}, ページID=${pageId}`)
 
 const router = useRouter()
 const createPage = () => {
-  router.push(`/create/page/${id}`)
+  router.push(`/create/page/${documentId}`)
 }
 const editDocument = () => {
-  router.push(`/edit/${id}`)
+  router.push(`/edit/${documentId}/${pageId}`)
 }
 const editTree = () => {
-  router.push(`/tree/${id}`)
+  router.push(`/tree/${documentId}`)
 }
 </script>
 

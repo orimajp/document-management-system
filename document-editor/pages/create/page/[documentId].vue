@@ -9,18 +9,19 @@ const {
 } = useDirtyState()
 
 const route  = useRoute()
-const id = route.params.id as string
-console.log(`ページ追加対象ドキュメントID=${id}`)
+const documentId = route.params.documentId as string
+console.log(`ページ追加対象ドキュメントID=${documentId}`)
 
 const router = useRouter()
 
 const register = () => {
-  // TODO 作成したページへ遷移
-  router.push(`/views/${id}`)
+  router.push(`/views/${documentId}/${documentId}`)
+  // TODO 生成ページのpageIdを取得して、そこに遷移する必要がある
+  // router.push(`/views/${documentId}/${pageIdId}`)
 }
 
 const cancel = async () => {
-  await router.push(`/views/${id}`)
+  await router.push(`/views/${documentId}/${documentId}`)
   clearDirtyState()
 }
 </script>
