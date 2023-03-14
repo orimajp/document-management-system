@@ -1,8 +1,7 @@
 import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
-import { CreateDocumentParam, UpdateDocumentParam } from '~~/models/document'
-import { DocumentItem } from '~~/models/document-item'
+import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from '~~/models/document'
 import { GetPageInfoParam } from '~~/models/page'
 import { DocumentIndex, PageData } from '~~/models/storage'
 //import { MenuData } from '~~/models/menu'
@@ -16,8 +15,8 @@ const CONTENT_FILE_NAME = 'content.json'
  * @param folderPath フォルダパス
  * @returns ドキュメントリスト
  */
-export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): Array<DocumentItem> => {
-  const allDirents = fs.readdirSync(folderPath)
+export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): Array<DocumentListItem> => {
+    const allDirents = fs.readdirSync(folderPath)
 
   const documents = allDirents.filter((file) =>
     fs.statSync(path.join(folderPath, file)).isDirectory())
@@ -26,16 +25,21 @@ export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): 
 //    console.log(`documents=${documents}`)
     console.log(documents)
 
-    return documents
+    return [...documents].sort((a, b) => b.updatedAt - a.updatedAt)
 }
 
-const toDocumentItem = (folder: string, fileName: string): DocumentItem => {
+const toDocumentItem = (folder: string, fileName: string): DocumentListItem => {
   const documentFolderPath = path.join(folder, fileName)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
   const documentIndexJson = fs.readFileSync(documentIndexPath, 'utf-8')
   const documentIndex = JSON.parse(documentIndexJson) as DocumentIndex
 
-  return { title: documentIndex.title, id: documentIndex.documentId, createdAt: '2000/01/01 00:00', updatedAt: '2020/01/01 00:00' }
+  return {
+    title: documentIndex.title,
+    documentId: documentIndex.documentId,
+    createdAt: documentIndex.createdAt,
+    updatedAt: documentIndex.updatedAt
+  }
 }
 
 // TODO ドキュメント新規作成
@@ -86,7 +90,7 @@ export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentP
 // ページ情報取得(ドキュメントも共用)
 export const getPageInfo = (event: IpcMainInvokeEvent, param: GetPageInfoParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
-  const pageFolderPath = path.join(documentFolderPath, param.documentId)
+  const pageFolderPath = path.join(documentFolderPath, param.pageId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
   try {

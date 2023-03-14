@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { DocumentItem } from '~~/models/document-item';
+import { DocumentListItem } from '~~/models/document';
+//import { DocumentItem } from '~~/models/document-item';
 
 const openFile = async () => {
   const result = await window.electronAPI.openFile()
@@ -13,7 +14,8 @@ const openFile = async () => {
 const { documentFolder } = useDocumentFolder()
 
 const documentState = reactive({
-  documents: [] as Array<DocumentItem>
+//  documents: [] as Array<DocumentItem>
+  documents: [] as Array<DocumentListItem>,
 })
 
 const loading = ref(false)

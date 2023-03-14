@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { DocumentItem } from '~~/models/document-item';
+import { DocumentListItem } from '~~/models/document';
 
 interface Props {
-  documents?: Array<DocumentItem>,
+  documents?: Array<DocumentListItem>
 }
 
 const props = withDefaults(defineProps<Props>(), {
   documents: () => [],
 })
+
+const {
+  formatDateTime,
+} = useFormatDate()
 
 const router = useRouter()
 const goViewPage = (id: string) => {
@@ -33,13 +37,13 @@ const goViewPage = (id: string) => {
     <tbody>
       <tr
         v-for="document in props.documents"
-        :key="document.id"
-        @click="goViewPage(document.id)"
+        :key="document.documentId"
+        @click="goViewPage(document.documentId)"
         class="document-list"
       >
         <td>{{ document.title }}</td>
-        <td>{{ document.createdAt }}</td>
-        <td>{{ document.updatedAt }}</td>
+        <td>{{ formatDateTime(document.createdAt) }}</td>
+        <td>{{ formatDateTime(document.updatedAt) }}</td>
       </tr>
     </tbody>    
   </v-table>
