@@ -33,14 +33,14 @@ const isDocument = computed(() => !content || content.documentId == content.page
 const router = useRouter()
 
 const {
-  updateDocumentInfo,
+  updateDocument,
 } = useDocument()
 
 const update = async () => {
   if (isDocument) {
     // ドキュメント更新
     console.log('ドキュメント更新')
-    await updateDocumentInfo(documentId, editTitle.value, editData.value)
+    await updateDocument(documentId, editTitle.value, editData.value)
   } else {
     // ページ更新
     console.log('ページ更新')

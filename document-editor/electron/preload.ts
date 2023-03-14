@@ -35,8 +35,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
       return ipcRenderer.invoke('getPageInfo', param)
     },
   
-    updateDocumentInfo: (param: UpdateDocumentParam) => {
-      ipcRenderer.invoke('updateDocumentInfo', param)
+    updateDocument: (param: UpdateDocumentParam) => {
+      ipcRenderer.invoke('updateDocument', param)
     },
   
   })

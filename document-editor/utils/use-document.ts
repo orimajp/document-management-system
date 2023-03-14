@@ -24,7 +24,7 @@ export const useDocument = () => {
     return documerntId
   }
 
-  const updateDocumentInfo = async (documentId: string, title: string, data: string) => {
+  const updateDocument = async (documentId: string, title: string, data: string) => {
     const now = (new Date()).getTime()
 
     const param: UpdateDocumentParam = {
@@ -35,11 +35,11 @@ export const useDocument = () => {
       updatedAt: now,
     }
 
-    await window.electronAPI.updateDocumentInfo(param)
+    await window.electronAPI.updateDocument(param)
   }
 
   return {
     createDocument,
-    updateDocumentInfo,
+    updateDocument,
   }
 }

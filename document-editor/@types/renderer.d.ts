@@ -10,7 +10,7 @@ export interface IElectronAPI {
   noticeDirty: (dirty: boolean) => void,
   createDocument: (param: CreateDocumentParam) => void,
   getPageInfo: (param: GetPageInfoParam) => PageInfo | null,
-  updateDocumentInfo: (param: UpdateDocumentParam) => void,
+  updateDocument: (param: UpdateDocumentParam) => void,
 }
 
 declare global {

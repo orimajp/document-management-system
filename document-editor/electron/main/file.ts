@@ -106,7 +106,7 @@ export const getPageInfo = (event: IpcMainInvokeEvent, param: GetPageInfoParam) 
 }
 
 // ドキュメント更新
-export const updateDocumentInfo = (event: IpcMainInvokeEvent, param: UpdateDocumentParam) => {
+export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.documentId)

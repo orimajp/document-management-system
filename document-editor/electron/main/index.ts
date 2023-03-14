@@ -3,7 +3,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import path from 'path'
 import fs from 'fs'
-import { getDocumentList, createDocument, getPageInfo, updateDocumentInfo, } from './file'
+import { getDocumentList, createDocument, getPageInfo, updateDocument, } from './file'
 import { createMenu } from './menu'
 
 // The built directory structure
@@ -203,4 +203,4 @@ ipcMain.handle('createDocument', createDocument)
 
 ipcMain.handle('getPageInfo', getPageInfo)
 
-ipcMain.handle('updateDocumentInfo', updateDocumentInfo)
+ipcMain.handle('updateDocument', updateDocument)
