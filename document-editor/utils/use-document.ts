@@ -20,6 +20,8 @@ export const useDocument = () => {
     }
 
     window.electronAPI.createDocument(param)
+
+    return documerntId
   }
 
   const updateDocumentInfo = async (documentId: string, title: string, data: string) => {

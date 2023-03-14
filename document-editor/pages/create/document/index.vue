@@ -15,9 +15,8 @@ const {
 const router = useRouter()
 
 const register = async () => {
-  // TODO 作成したドキュメントへ遷移
-  await createDocument(editTitle.value, editData.value)
-  router.push('/')
+  const documentId = await createDocument(editTitle.value, editData.value)
+  router.push(`/views/${documentId}/${documentId}`)
 }
 
 const cancel = async () => {
