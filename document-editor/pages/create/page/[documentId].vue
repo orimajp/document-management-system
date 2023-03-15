@@ -14,10 +14,13 @@ console.log(`ページ追加対象ドキュメントID=${documentId}`)
 
 const router = useRouter()
 
-const register = () => {
-  router.push(`/views/${documentId}/${documentId}`)
-  // TODO 生成ページのpageIdを取得して、そこに遷移する必要がある
-  // router.push(`/views/${documentId}/${pageIdId}`)
+const {
+  createPage,
+} = usePage()
+
+const register = async () => {
+  const pageId = await createPage(documentId, editTitle.value, editData.value)
+  router.push(`/views/${documentId}/${pageId}`)
 }
 
 const cancel = async () => {

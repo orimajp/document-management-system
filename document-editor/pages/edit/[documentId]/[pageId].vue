@@ -28,7 +28,7 @@ if (!content) {
 }
 
 // TODO ドキュメント/ページ判定
-const isDocument = computed(() => !content || content.documentId == content.pageId)
+const isDocument = computed(() => content === null || documentId === pageId)
 
 const router = useRouter()
 
@@ -36,14 +36,19 @@ const {
   updateDocument,
 } = useDocument()
 
+const {
+  updatePage,
+} = usePage()
+
 const update = async () => {
-  if (isDocument) {
+  if (isDocument.value) {
     // ドキュメント更新
     console.log('ドキュメント更新')
     await updateDocument(documentId, editTitle.value, editData.value)
   } else {
     // ページ更新
     console.log('ページ更新')
+    await updatePage(documentId, pageId, editTitle.value, editData.value)
   }
   router.push(`/views/${documentId}/${pageId}`)
 }

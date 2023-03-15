@@ -4,7 +4,7 @@ export interface CreatePageParam {
   pageId: string
   title: string
   data: string
-  createdAt: string
+  createdAt: number
 }
 
 export interface UpdatePageParam {
@@ -13,8 +13,7 @@ export interface UpdatePageParam {
   pageId: string
   title: string
   data: string
-  createdAt: string
-  updatedAt: string
+  updatedAt: number
 }
 
 export interface DeletePageParam {

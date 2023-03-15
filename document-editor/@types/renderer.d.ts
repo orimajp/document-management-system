@@ -1,6 +1,6 @@
 import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from "~~/models/document";
 import { DocumentItem } from "~~/models/document-item";
-import { GetPageInfoParam, PageInfo } from "~~/models/page";
+import { CreatePageParam, GetPageInfoParam, PageInfo, UpdatePageParam } from "~~/models/page";
 
 export interface IElectronAPI {
   openFile: () => Promise<{ filePath: string; textData: string; }>,
@@ -11,6 +11,8 @@ export interface IElectronAPI {
   createDocument: (param: CreateDocumentParam) => void,
   getPageInfo: (param: GetPageInfoParam) => PageInfo | null,
   updateDocument: (param: UpdateDocumentParam) => void,
+  createPage: (param: CreatePageParam) => void,
+  updatePage: (param: UpdatePageParam) => void,
 }
 
 declare global {

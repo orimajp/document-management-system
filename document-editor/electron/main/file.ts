@@ -2,7 +2,7 @@ import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from '~~/models/document'
-import { GetPageInfoParam } from '~~/models/page'
+import { CreatePageParam, GetPageInfoParam, UpdatePageParam } from '~~/models/page'
 import { DocumentIndex, PageData } from '~~/models/storage'
 //import { MenuData } from '~~/models/menu'
 
@@ -42,7 +42,11 @@ const toDocumentItem = (folder: string, fileName: string): DocumentListItem => {
   }
 }
 
-// TODO ドキュメント新規作成
+/**
+ * ドキュメント新規作成
+ * @param event イベント
+ * @param param パラメータ
+ */
 export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentParam): void => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
@@ -70,7 +74,7 @@ export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentP
     fs.mkdirSync(pageFolderPath)
   }
 
-  // ページデータ書き込み (folder/documentId/documentId/page.json)
+  // ページデータ書き込み (folder/documentId/documentId/content.json)
   const pageData: PageData = {
     documentId: param.documentId,
     pageId: param.documentId,
@@ -87,7 +91,12 @@ export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentP
 
 // TODO ドキュメント削除
 
-// ページ情報取得(ドキュメントも共用)
+/**
+ * ページ情報取得(ドキュメントも共用)
+ * @param event イベント
+ * @param param パラメータ
+ * @returns ページ情報
+ */
 export const getPageInfo = (event: IpcMainInvokeEvent, param: GetPageInfoParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const pageFolderPath = path.join(documentFolderPath, param.pageId)
@@ -105,7 +114,11 @@ export const getPageInfo = (event: IpcMainInvokeEvent, param: GetPageInfoParam) 
   }
 }
 
-// ドキュメント更新
+/**
+ * ドキュメント更新
+ * @param event イベント
+ * @param param パラメータ
+ */
 export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
@@ -141,9 +154,64 @@ export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentP
 }
 
 
-// TODO ページ作成
+/**
+ * ページ作成
+ * @param event イベント
+ * @param param パラメータ
+ */
+export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) => {
+  const documentFolderPath = path.join(param.folder, param.documentId)
+  const pageFolderPath = path.join(documentFolderPath, param.pageId)
+  const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
-// TODO ページ更新
+  // ページフォルダ作成 (folder/documentId/pageId)
+  if (!fs.existsSync(pageFolderPath)) {
+    fs.mkdirSync(pageFolderPath)
+  }
+
+  // ページデータ書き込み (folder/documentId/pageId/content.json)
+  const pageData: PageData = {
+    documentId: param.documentId,
+    pageId: param.pageId,
+    title: param.title,
+    data: param.data,
+    createdAt: param.createdAt,
+    updatedAt: param.createdAt,
+    temp: true,
+  }
+
+  fs.writeFileSync(pageDataPath, JSON.stringify(pageData, null, 2))
+}
+
+/**
+ * ページ更新
+ * @param event イベント
+ * @param param パラメータ
+ */
+export const updatePage = (event: IpcMainInvokeEvent, param: UpdatePageParam) => {
+  const documentFolderPath = path.join(param.folder, param.documentId)
+  const pageFolderPath = path.join(documentFolderPath, param.pageId)
+  const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
+
+  console.log('updatePage')
+  try {
+    fs.statSync(pageDataPath)
+
+    const getPageInfoParam: GetPageInfoParam = {
+      folder: param.folder,
+      documentId: param.documentId,
+      pageId: param.pageId,
+    }
+    const pageData = getPageInfo(event, getPageInfoParam)
+    if (!pageData) throw new Error('ファイル未発見')
+    pageData.title = param.title
+    pageData.data = param.data
+    pageData.updatedAt = param.updatedAt
+    fs.writeFileSync(pageDataPath, JSON.stringify(pageData, null, 2))
+  } catch(err) {
+    console.log(err)
+  }
+}
 
 // TODO ページ削除
 
