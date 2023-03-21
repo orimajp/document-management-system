@@ -1,6 +1,7 @@
 // https://github.com/ics-creative/150819_electron_text_editor/blob/maiin/src/preload.js
 import { contextBridge, ipcRenderer } from 'electron'
 import { CreateDocumentParam, UpdateDocumentParam } from '~~/models/document';
+import { GetMenuInfoParam } from '~~/models/menu';
 import { CreatePageParam, GetPageInfoParam, UpdatePageParam } from '~~/models/page';
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -45,6 +46,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     updatePage: (param: UpdatePageParam) => {
       ipcRenderer.invoke('updatePage', param)
-    }
+    },
+
+    getMenuData: (param: GetMenuInfoParam) => {
+      return ipcRenderer.invoke('getMenuData', param)
+    },
 
   })

@@ -1,5 +1,10 @@
-export interface MenuData {
+export interface GetMenuInfoParam {
+  folder: string
+  documentId: string
+}
+
+export interface MenuInfo {
   title: string,
-  id: string,
-  menus: Array<MenuData>,
+  pageId: string,
+  menus: Array<MenuInfo>,
 }

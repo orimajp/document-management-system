@@ -1,5 +1,6 @@
 import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from "~~/models/document";
 import { DocumentItem } from "~~/models/document-item";
+import { GetMenuInfoParam, MenuInfo } from "~~/models/menu";
 import { CreatePageParam, GetPageInfoParam, PageInfo, UpdatePageParam } from "~~/models/page";
 
 export interface IElectronAPI {
@@ -13,6 +14,7 @@ export interface IElectronAPI {
   updateDocument: (param: UpdateDocumentParam) => void,
   createPage: (param: CreatePageParam) => void,
   updatePage: (param: UpdatePageParam) => void,
+  getMenuData: (param: GetMenuInfoParam) => MenuInfo | null,
 }
 
 declare global {

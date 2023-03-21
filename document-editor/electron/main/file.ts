@@ -2,12 +2,13 @@ import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from '~~/models/document'
+import { GetMenuInfoParam, MenuInfo } from '~~/models/menu'
 import { CreatePageParam, GetPageInfoParam, UpdatePageParam } from '~~/models/page'
-import { DocumentIndex, PageData } from '~~/models/storage'
-//import { MenuData } from '~~/models/menu'
+import { DocumentIndex, PageData, MenuData, } from '~~/models/storage'
 
 const DOCUMENT_INDEX_FILE_NAME = 'document.json'
 const CONTENT_FILE_NAME = 'content.json'
+const MENU_FILE_NAME = 'menu.json'
 
 /**
  * ドキュメントリスト取得
@@ -22,7 +23,6 @@ export const getDocumentList = (event: IpcMainInvokeEvent, folderPath: string): 
     fs.statSync(path.join(folderPath, file)).isDirectory())
     .map(fileName => toDocumentItem(folderPath, fileName))
 
-//    console.log(`documents=${documents}`)
     console.log(documents)
 
     return [...documents].sort((a, b) => b.updatedAt - a.updatedAt)
@@ -50,6 +50,7 @@ const toDocumentItem = (folder: string, fileName: string): DocumentListItem => {
 export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentParam): void => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.documentId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
@@ -68,6 +69,15 @@ export const createDocument = (event: IpcMainInvokeEvent, param: CreateDocumentP
   }
 
   fs.writeFileSync(documentIndexPath, JSON.stringify(documentIndex, null, 2))
+
+  // メニューデータ書き込み (folder/documentId/menu.json)
+  const menuData: MenuData = {
+    pageId: param.documentId,
+    title: param.title,
+    menus: [],
+  }
+
+  fs.writeFileSync(menuDataPath, JSON.stringify(menuData, null, 2))
 
   // ページフォルダ作成 (folder/documentId/documentId)
   if (!fs.existsSync(pageFolderPath)) {
@@ -122,13 +132,16 @@ export const getPageInfo = (event: IpcMainInvokeEvent, param: GetPageInfoParam) 
 export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
   const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.documentId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
   try {
     fs.statSync(documentIndexPath)
+    fs.statSync(menuDataPath)
     fs.statSync(pageDataPath)
 
+    // ドキュメントインデックス更新 (folder/documentId/document.json)
     console.log('ドキュメントインデックス読み込み')
     const documentIndexJson = fs.readFileSync(documentIndexPath, 'utf-8')
     const documentIndex = JSON.parse(documentIndexJson) as DocumentIndex
@@ -136,6 +149,17 @@ export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentP
     documentIndex.updatedAt = param.updatedAt
     fs.writeFileSync(documentIndexPath, JSON.stringify(documentIndex, null, 2))
 
+    // メニューデータ更新 (folder/documentId/menu.json)
+    const getMenuIonfParam: GetMenuInfoParam = {
+      folder: param.folder,
+      documentId: param.documentId
+    }
+    const menuDatas = getMenuData(event, getMenuIonfParam)
+    if (!menuDatas) throw new Error('メニュー未発見')
+    menuDatas.title = param.title
+    fs.writeFileSync(menuDataPath, JSON.stringify(menuDatas, null, 23))
+
+    // ページデータ更新 (folder/documentId/pageId/content.json)
     console.log('ページデータ読み込み')
     const getPageInfoParam: GetPageInfoParam = {
       folder: param.folder,
@@ -161,26 +185,48 @@ export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentP
  */
 export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.pageId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
-  // ページフォルダ作成 (folder/documentId/pageId)
-  if (!fs.existsSync(pageFolderPath)) {
-    fs.mkdirSync(pageFolderPath)
-  }
+  try {
+    fs.statSync(menuDataPath)
 
-  // ページデータ書き込み (folder/documentId/pageId/content.json)
-  const pageData: PageData = {
-    documentId: param.documentId,
-    pageId: param.pageId,
-    title: param.title,
-    data: param.data,
-    createdAt: param.createdAt,
-    updatedAt: param.createdAt,
-    temp: true,
-  }
+    // ページフォルダ作成 (folder/documentId/pageId)
+    if (!fs.existsSync(pageFolderPath)) {
+      fs.mkdirSync(pageFolderPath)
+    }
 
-  fs.writeFileSync(pageDataPath, JSON.stringify(pageData, null, 2))
+    // メニューデータ更新 (folder/documentId/menu.json)
+    const getMenuIonfParam: GetMenuInfoParam = {
+      folder: param.folder,
+      documentId: param.documentId
+    }
+    const menuDatas = getMenuData(event, getMenuIonfParam)
+    if (!menuDatas) throw new Error(`メニュー未発見 documentId=${param.documentId}`)
+    const menuData: MenuInfo = {
+      pageId: param.pageId,
+      title: param.title,
+      menus: [],
+    }
+    menuDatas.menus.push(menuData)
+    fs.writeFileSync(menuDataPath, JSON.stringify(menuDatas, null, 2))
+
+    // ページデータ書き込み (folder/documentId/pageId/content.json)
+    const pageData: PageData = {
+      documentId: param.documentId,
+      pageId: param.pageId,
+      title: param.title,
+      data: param.data,
+      createdAt: param.createdAt,
+      updatedAt: param.createdAt,
+      temp: true,
+    }
+
+    fs.writeFileSync(pageDataPath, JSON.stringify(pageData, null, 2))
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 /**
@@ -190,13 +236,29 @@ export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) =>
  */
 export const updatePage = (event: IpcMainInvokeEvent, param: UpdatePageParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.pageId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
   console.log('updatePage')
   try {
+    fs.statSync(menuDataPath)
     fs.statSync(pageDataPath)
 
+    // メニューデータ更新 (folder/documentId/menu.json)
+    const getMenuIonfParam: GetMenuInfoParam = {
+      folder: param.folder,
+      documentId: param.documentId
+    }
+    const menuDatas = getMenuData(event, getMenuIonfParam)
+    if (!menuDatas) throw new Error(`メニュー未発見 documentId=${param.documentId}`)
+    const menus = menuDatas.menus
+    const menu = menus.filter(m => m.pageId === param.pageId)
+    if (menu.length === 0) throw new Error(`ページID未発見 ID=${param.pageId}`)
+    menu[0].title = param.title
+    fs.writeFileSync(menuDataPath, JSON.stringify(menuDatas, null, 2))
+
+    // ページデータ更新 (folder/documentId/pageId/content.json)
     const getPageInfoParam: GetPageInfoParam = {
       folder: param.folder,
       documentId: param.documentId,
@@ -226,3 +288,26 @@ export const updatePage = (event: IpcMainInvokeEvent, param: UpdatePageParam) =>
 // TODO メニューデータ取得
 
 // TODO ZIPデータ取得 (これは要検討)
+
+
+/**
+ * メニューデータ取得
+ * @param folder フォルダ
+ * @param documentId ドキュメントID
+ * @param pageId ページID
+ * @returns メニューデータ
+ */
+export const getMenuData = (event: IpcMainInvokeEvent, param: GetMenuInfoParam) => {
+  const documentFolderPath = path.join(param.folder, param.documentId)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
+  try {
+    fs.statSync(menuDataPath)
+    const json = fs.readFileSync(menuDataPath, 'utf-8')
+    const content = JSON.parse(json) as MenuInfo
+    console.log(content)
+    return content
+  } catch (err) {
+    console.log(err)
+    return null
+  }
+}
