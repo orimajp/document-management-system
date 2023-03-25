@@ -25,21 +25,21 @@
     "@vueuse/nuxt": "^9.13.0",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.7",
-    "electron": "^23.1.4",
+    "electron": "^23.2.0",
     "electron-builder": "^23.6.0",
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.1.1",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.7.0",
     "html-escaper": "^3.0.3",
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "monaco-editor": "^0.36.1",
-    "nuxt": "3.2.3",
-    "@nuxt/kit": "3.2.3",
+    "nuxt": "3.3.2",
+    "@nuxt/kit": "3.3.2",
     "nuxt-electron": "^0.3.1",
-    "sass": "^1.59.3",
+    "sass": "^1.60.0",
     "sass-loader": "^13.2.1",
     "ulid": "^2.3.0",
-    "vuetify": "^3.1.10"
+    "vuetify": "^3.1.11"
   }
 }
