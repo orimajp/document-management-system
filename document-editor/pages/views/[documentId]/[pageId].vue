@@ -44,7 +44,7 @@ const editTree = () => {
       @edit-document="editDocument"
       @edit-tree="editTree"
     />
-    <ViewNavigationDrawer
+    <ViewTreeDrawer
       :document-id="documentId"
       :page-id="pageId"
     />

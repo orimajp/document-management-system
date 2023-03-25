@@ -4,7 +4,16 @@ export interface GetMenuInfoParam {
 }
 
 export interface MenuInfo {
-  title: string,
-  pageId: string,
-  menus: Array<MenuInfo>,
+  title: string
+  pageId: string
+  menus: Array<MenuInfo>
+}
+
+export interface MenuNode {
+  title: string
+  documentId: string
+  pageId: string
+  expand: boolean
+  select: boolean
+  nodes: Array<MenuNode>
 }

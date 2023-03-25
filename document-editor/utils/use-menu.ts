@@ -1,4 +1,5 @@
 import { GetMenuInfoParam } from "~~/models/menu"
+import { useMenuNode } from "./use-menu-node"
 
 export const useMenu = () => {
   const {
@@ -15,7 +16,18 @@ export const useMenu = () => {
     return menu
   }
 
+  const {
+    toMenuNode,
+  } = useMenuNode()
+
+  const getMenuNode = async (documentId: string, pageId: string) => {
+    const menu = await getMenuInfo(documentId)
+    if (!menu) return null
+    return toMenuNode(documentId, pageId, menu)
+  }
+
   return {
-    getMenuInfo
+    getMenuInfo,
+    getMenuNode,
   }
 }
