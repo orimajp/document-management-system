@@ -2,7 +2,7 @@ import { IpcMainInvokeEvent } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import { CreateDocumentParam, DocumentListItem, UpdateDocumentParam } from '~~/models/document'
-import { GetMenuInfoParam, MenuInfo } from '~~/models/menu'
+import { GetMenuInfoParam, MenuInfo, UpdateMenuIntoParam } from '~~/models/menu'
 import { CreatePageParam, GetPageInfoParam, UpdatePageParam } from '~~/models/page'
 import { DocumentIndex, PageData, MenuData, } from '~~/models/storage'
 
@@ -289,12 +289,10 @@ export const updatePage = (event: IpcMainInvokeEvent, param: UpdatePageParam) =>
 
 // TODO ZIPデータ取得 (これは要検討)
 
-
 /**
  * メニューデータ取得
- * @param folder フォルダ
- * @param documentId ドキュメントID
- * @param pageId ページID
+ * @param event イベント
+ * @param param パラメータ
  * @returns メニューデータ
  */
 export const getMenuData = (event: IpcMainInvokeEvent, param: GetMenuInfoParam) => {
@@ -309,5 +307,22 @@ export const getMenuData = (event: IpcMainInvokeEvent, param: GetMenuInfoParam) 
   } catch (err) {
     console.log(err)
     return null
+  }
+}
+
+/**
+ * メニューデータ更新
+ * @param event イベント
+ * @param param パラメータ
+ */
+export const updateMenuData = (event: IpcMainInvokeEvent, param: UpdateMenuIntoParam) => {
+  const documentFolderPath = path.join(param.folder, param.documentId)
+  const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
+  try {
+    console.log(param)
+    fs.statSync(menuDataPath)
+    fs.writeFileSync(menuDataPath, JSON.stringify(param.menuInfo, null, 2))
+  } catch (err) {
+    console.log(err)
   }
 }

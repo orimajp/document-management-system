@@ -44,11 +44,14 @@ const createDocument = async () => {
 
 <template>
   <v-app>
-    <v-app-bar density="compact">
+    <v-app-bar
+      density="compact"
+      class="navbar-area"
+    >
       <v-app-bar-title>
         ドキュメント一覧
       </v-app-bar-title>
-      <v-spacer></v-spacer>
+      <v-spacer class="space"></v-spacer>
       <v-btn
         variant="outlined"
         color="grey"
@@ -98,6 +101,15 @@ const createDocument = async () => {
 </template>
 
 <style scoped>
+.navbar-area {
+  -webkit-app-region: drag
+}
+.title {
+  -webkit-app-region: drag
+}
+.space {
+  -webkit-app-region: drag
+}
 .alert-area {
   margin-top: 20px;
 }

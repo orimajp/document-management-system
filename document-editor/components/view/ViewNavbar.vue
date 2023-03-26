@@ -30,7 +30,10 @@ const goTop = () => {
 </script>
 
 <template>
-  <v-app-bar density="compact">
+  <v-app-bar
+    density="compact"
+    class="navbar-area"
+    >
     <template v-slot:prepend>
       <v-btn icon="mdi-home" @click="goTop">
       </v-btn>
@@ -40,7 +43,7 @@ const goTop = () => {
     >
       {{ props.documentTitle }}
     </v-app-bar-title>
-    <v-spacer></v-spacer>
+    <v-spacer class="space"></v-spacer>
     <v-btn
       variant="outlined"
       color="grey"
@@ -68,11 +71,19 @@ const goTop = () => {
 </template>
 
 <style scoped>
+.navbar-area {
+  -webkit-app-region: drag
+}
 .title {
   font-size: 90%;
+  -webkit-app-region: drag
+}
+.space {
+  -webkit-app-region: drag
 }
 .button {
   margin-left: 8px;
   width: 100px;
+  -webkit-app-region: no-drag;
 }
 </style>

@@ -3,6 +3,12 @@ export interface GetMenuInfoParam {
   documentId: string
 }
 
+export interface UpdateMenuIntoParam {
+  folder: string
+  documentId: string
+  menuInfo: MenuInfo
+}
+
 export interface MenuInfo {
   title: string
   pageId: string

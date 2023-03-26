@@ -9,6 +9,21 @@ export const useMenuNode = () => {
     return menuNode
   }
 
+  const expandNode = (menuNode: MenuNode): boolean => {
+    if (menuNode.select) {
+      menuNode.expand = true
+      return true
+    }
+    for (const node of menuNode.nodes) {
+      const result = expandNode(node)
+      if (result) {
+        node.expand = true
+        return true
+      }
+    }
+    return false
+  }
+
   const createSingleMenuNode = (documentId: string, pageId: string, menuInfo: MenuInfo): MenuNode => {
     return {
       title: menuInfo.title,
@@ -22,5 +37,6 @@ export const useMenuNode = () => {
 
   return {
     toMenuNode,
+    expandNode,
   }
 }

@@ -11,6 +11,7 @@ import {
   createPage,
   updatePage,
   getMenuData,
+  updateMenuData,
 } from './file'
 import { createMenu } from './menu'
 
@@ -218,3 +219,5 @@ ipcMain.handle('createPage', createPage)
 ipcMain.handle('updatePage', updatePage)
 
 ipcMain.handle('getMenuData', getMenuData)
+
+ipcMain.handle('updateMenuData', updateMenuData)
