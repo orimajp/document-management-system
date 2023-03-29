@@ -7,6 +7,7 @@ export interface UpdateMenuIntoParam {
   folder: string
   documentId: string
   menuInfo: MenuInfo
+  updatedAt: number
 }
 
 export interface MenuInfo {

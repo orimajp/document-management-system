@@ -185,12 +185,21 @@ export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentP
  */
 export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
+  const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
   const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.pageId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
   try {
+    fs.statSync(documentIndexPath)
     fs.statSync(menuDataPath)
+
+    // ドキュメントインデックス更新 (folder/documentId/document.json)
+    console.log('ドキュメントインデックス読み込み')
+    const documentIndexJson = fs.readFileSync(documentIndexPath, 'utf-8')
+    const documentIndex = JSON.parse(documentIndexJson) as DocumentIndex
+    documentIndex.updatedAt = param.createdAt
+    fs.writeFileSync(documentIndexPath, JSON.stringify(documentIndex, null, 2))
 
     // ページフォルダ作成 (folder/documentId/pageId)
     if (!fs.existsSync(pageFolderPath)) {
@@ -236,14 +245,24 @@ export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) =>
  */
 export const updatePage = (event: IpcMainInvokeEvent, param: UpdatePageParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
+  const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
   const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   const pageFolderPath = path.join(documentFolderPath, param.pageId)
   const pageDataPath = path.join(pageFolderPath, CONTENT_FILE_NAME)
 
   console.log('updatePage')
   try {
+    fs.statSync(documentIndexPath)
     fs.statSync(menuDataPath)
     fs.statSync(pageDataPath)
+
+    // ドキュメントインデックス更新 (folder/documentId/document.json)
+    console.log('ドキュメントインデックス読み込み')
+    const documentIndexJson = fs.readFileSync(documentIndexPath, 'utf-8')
+    const documentIndex = JSON.parse(documentIndexJson) as DocumentIndex
+    documentIndex.title = param.title
+    documentIndex.updatedAt = param.updatedAt
+    fs.writeFileSync(documentIndexPath, JSON.stringify(documentIndex, null, 2))
 
     // メニューデータ更新 (folder/documentId/menu.json)
     const getMenuIonfParam: GetMenuInfoParam = {
@@ -317,10 +336,21 @@ export const getMenuData = (event: IpcMainInvokeEvent, param: GetMenuInfoParam) 
  */
 export const updateMenuData = (event: IpcMainInvokeEvent, param: UpdateMenuIntoParam) => {
   const documentFolderPath = path.join(param.folder, param.documentId)
+  const documentIndexPath = path.join(documentFolderPath, DOCUMENT_INDEX_FILE_NAME)
   const menuDataPath = path.join(documentFolderPath, MENU_FILE_NAME)
   try {
     console.log(param)
+    fs.statSync(documentIndexPath)
     fs.statSync(menuDataPath)
+
+    // ドキュメントインデックス更新 (folder/documentId/document.json)
+    console.log('ドキュメントインデックス読み込み')
+    const documentIndexJson = fs.readFileSync(documentIndexPath, 'utf-8')
+    const documentIndex = JSON.parse(documentIndexJson) as DocumentIndex
+    documentIndex.updatedAt = param.updatedAt
+    fs.writeFileSync(documentIndexPath, JSON.stringify(documentIndex, null, 2))
+
+    // メニューデータ更新 (folder/documentId/menu.json)
     fs.writeFileSync(menuDataPath, JSON.stringify(param.menuInfo, null, 2))
   } catch (err) {
     console.log(err)
