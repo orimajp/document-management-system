@@ -177,7 +177,6 @@ export const updateDocument = (event: IpcMainInvokeEvent, param: UpdateDocumentP
   }
 }
 
-
 /**
  * ページ作成
  * @param event イベント
@@ -218,7 +217,7 @@ export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) =>
       title: param.title,
       menus: [],
     }
-    menuDatas.menus.push(menuData)
+    menuDatas.menus.unshift(menuData)
     fs.writeFileSync(menuDataPath, JSON.stringify(menuDatas, null, 2))
 
     // ページデータ書き込み (folder/documentId/pageId/content.json)

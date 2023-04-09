@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const editTitle = ref('')
 const editData = ref('')
+const modal = ref(false)
+const pageId = ref('')
 
 useConfirmUnload()
 
@@ -19,8 +21,8 @@ const {
 } = usePage()
 
 const register = async () => {
-  const pageId = await createPage(documentId, editTitle.value, editData.value)
-  router.push(`/views/${documentId}/${pageId}`)
+  pageId.value = await createPage(documentId, editTitle.value, editData.value)
+  modal.value = true
 }
 
 const cancel = async () => {
@@ -37,6 +39,11 @@ const cancel = async () => {
       @register="register"
       @cancel="cancel"
       :create="true"
+    />
+    <EditTreeSelectionDialog
+      v-model:show-modal="modal"
+      :document-id="documentId"
+      :current-page-id="pageId"
     />
   </v-app>
 </template>

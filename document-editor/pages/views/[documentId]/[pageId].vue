@@ -32,7 +32,7 @@ const editDocument = () => {
   router.push(`/edit/${documentId}/${pageId}`)
 }
 const editTree = () => {
-  router.push(`/tree/${documentId}`)
+  router.push(`/tree/${documentId}/${pageId}`)
 }
 </script>
 

@@ -11,13 +11,12 @@ const props = defineProps<Props>()
 
 const {
   moving,
-    selectedPageId,
-    startMove,
-    endMove,
-    mouseDown,
-    mouseUp,
-    isCurrentPage,
-    selectionPage
+  startMove,
+  endMove,
+  mouseDown,
+  mouseUp,
+  isCurrentPage,
+  selectionPage
 } = useTreeDraggable(props)
 </script>
 

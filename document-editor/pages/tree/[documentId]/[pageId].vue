@@ -3,7 +3,8 @@ import { MenuInfo } from '~~/models/menu';
 
 const route = useRoute()
 const documentId = route.params.documentId as string
-console.log(`documetnId=${documentId}`)
+const pageId = route.params.pageId as string
+console.log(`documetnId=${documentId}, pageId=${pageId}`)
 
 const {
   getPageInfo,
@@ -36,11 +37,11 @@ const {
 const update = async () => {
   const updateMenuInfo = JSON.parse(JSON.stringify(menuInfo))
   await updateMenuData(documentId, updateMenuInfo)
-  router.push(`/views/${documentId}/${documentId}`)
+  router.push(`/views/${documentId}/${pageId}`)
 }
 
 const cancel = () => {
-  router.push(`/views/${documentId}/${documentId}`)
+  router.push(`/views/${documentId}/${pageId}`)
 }
 </script>
 
@@ -52,16 +53,16 @@ const cancel = () => {
     <v-main>
       <v-container style="height: 100%;">
         <div class="tree-edit-content">
-        <v-card
-          class="tree-edit-area"
-          valiant="outlined"
-        >
-          <TreeDraggable
-            :menus="menuInfo.menus"
-            :current-page-id="documentId"
-          />
-        </v-card>
-      </div>
+          <v-card
+            class="tree-edit-area"
+            valiant="outlined"
+          >
+            <TreeDraggable
+              :menus="menuInfo.menus"
+              :current-page-id="pageId"
+            />
+          </v-card>
+        </div>
       </v-container>
     </v-main>
     <TreeEditorFooter
