@@ -19,7 +19,7 @@ export const usePage = () => {
     return content
   }
 
-  const createPage = async (documentId: string, title: string, data: string) => {
+  const createPageSelectPosition = async (documentId: string, title: string, data: string) => {
     const now = (new Date()).getTime()
     const pageId = ulid()
     const param: CreatePageParam = {
@@ -29,6 +29,42 @@ export const usePage = () => {
       title: title,
       data: data,
       createdAt: now,
+    }
+
+    await window.electronAPI.createPage(param)
+
+    return pageId
+  }
+
+  const createPagePrevendChild = async (documentId: string, title: string, data: string, prevendChildTargetId: string) => {
+    const now = (new Date()).getTime()
+    const pageId = ulid()
+    const param: CreatePageParam = {
+      folder: documentFolder.value,
+      documentId: documentId,
+      pageId: pageId,
+      title: title,
+      data: data,
+      createdAt: now,
+      prevendChildTargetId: prevendChildTargetId,
+    }
+
+    await window.electronAPI.createPage(param)
+
+    return pageId
+  }
+
+  const createPageAppendNext = async (documentId: string, title: string, data: string, appendNextTargetId: string) => {
+    const now = (new Date()).getTime()
+    const pageId = ulid()
+    const param: CreatePageParam = {
+      folder: documentFolder.value,
+      documentId: documentId,
+      pageId: pageId,
+      title: title,
+      data: data,
+      createdAt: now,
+      appendNextTargetId: appendNextTargetId,
     }
 
     await window.electronAPI.createPage(param)
@@ -52,7 +88,9 @@ export const usePage = () => {
 
   return {
     getPageInfo,
-    createPage,
+    createPageSelectPosition,
+    createPagePrevendChild,
+    createPageAppendNext,
     updatePage,
   }
 }

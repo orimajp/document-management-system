@@ -9,13 +9,22 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const emit = defineEmits<{
+  (e: 'openContextMenu', documentId: string, pageId: string, pageTitle: string, ex: MouseEvent): void
+}>()
+
+const openContextMenu = (documentId: string,pageId: string, pageTitle: string, e: MouseEvent) => {
+  emit('openContextMenu', documentId, pageId, pageTitle, e)
+}
+
 const {
   iconText,
   notDocument,
   firstNode,
   addPageIdArray,
   openPage,
-} = useTree(props)
+  openTreeContextMenu,
+} = useTree(props, openContextMenu)
 </script>
 
 <template>
@@ -25,6 +34,7 @@ const {
       class="doc-list"
       :class="{ selected: currentNode.select }"
       @click="openPage"
+      @contextmenu="openTreeContextMenu"
     >
       <v-icon class="collapse-icon" :icon="iconText" />
       <span>{{ currentNode.title }}</span>
@@ -40,6 +50,7 @@ const {
         :key="index"
         :page-id-array="addPageIdArray"
         :current-node="child"
+        @openContextMenu="openContextMenu"
       />
     </li>
   </ul>

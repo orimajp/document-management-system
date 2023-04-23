@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTreeContextControll } from '~/composables/contextmenu/use-tree-context-menu-controll';
 import { MenuNode } from '~~/models/menu';
 
 interface Props {
@@ -51,6 +52,22 @@ const router = useRouter()
 const goDocumentTop = () => {
   router.push(`/views/${documentId.value}/${documentId.value}`)
 }
+
+const {
+  openTopContextMenu,
+  openTreeContextMenu,
+  closeContextMenu,
+  contextMenuParam
+} = useTreeContextControll()
+
+const topContextMenu = (e: MouseEvent) => {
+  openTopContextMenu(documentId.value, documentId.value, menuNodes.title, e)
+}
+
+const treeContextMenu = (documentId: string, pageId: string, pageTitle: string, e: MouseEvent) => {
+  openTreeContextMenu(documentId, pageId, pageTitle, e)
+}
+
 </script>
 
 <template>
@@ -63,6 +80,7 @@ const goDocumentTop = () => {
         class="document-top-link"
         :class="{ selected: documentSelected }"
         @click="goDocumentTop"
+        @contextmenu="topContextMenu"
         v-text="menuNodes.title"
       />
       <div
@@ -71,10 +89,15 @@ const goDocumentTop = () => {
         <ViewTreeItem
           :current-node="menuNodes"
           :page-id-array="pageIdArray"
+          @openContextMenu="treeContextMenu"
         />
       </div>
     </div>
-</v-navigation-drawer>
+    <ViewTreeContextMenu
+      :tree-context-menu-param="contextMenuParam"
+      @closeContextMenu="closeContextMenu"
+    />
+  </v-navigation-drawer>
 </template>
 
 <style scoped>

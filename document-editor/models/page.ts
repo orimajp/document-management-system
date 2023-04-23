@@ -5,6 +5,8 @@ export interface CreatePageParam {
   title: string
   data: string
   createdAt: number
+  prevendChildTargetId?: string
+  appendNextTargetId?: string
 }
 
 export interface UpdatePageParam {

@@ -6,7 +6,8 @@ interface Props {
 }
 
 export const useTree = (
-  treeProps: Props
+  treeProps: Props,
+  openContextMenu: (documentId: string, pageId: string, pageTitle: string, e: MouseEvent) => void,
 ) => {
   const iconText = computed(() => {
     if (!treeProps.currentNode.nodes
@@ -28,6 +29,8 @@ export const useTree = (
 
   const currentPageId = computed(() => treeProps.currentNode.pageId)
 
+  const currentPageTitle = computed(() => treeProps.currentNode.title)
+
   const addPageIdArray = computed(() =>
     treeProps.pageIdArray.concat(currentPageId.value)
   )
@@ -37,6 +40,10 @@ export const useTree = (
     return router.push(`/views/${currentDocumentId.value}/${currentPageId.value}`)
   }
 
+  const openTreeContextMenu = (e: MouseEvent) => {
+    openContextMenu(currentDocumentId.value, currentPageId.value, currentPageTitle.value, e)
+  }
+
   return {
     iconText,
     notDocument,
@@ -44,5 +51,6 @@ export const useTree = (
     currentPageId,
     addPageIdArray,
     openPage,
+    openTreeContextMenu,
   }
 }

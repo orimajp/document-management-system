@@ -12,17 +12,33 @@ const {
 
 const route  = useRoute()
 const documentId = route.params.documentId as string
-console.log(`ページ追加対象ドキュメントID=${documentId}`)
+const prevendChildTargetId = route.query.prevendChildTargetId
+  ? (route.query.prevendChildTargetId as string)
+  : null
+const appendNextTargetId = route.query.appendNextTargetId
+  ? (route.query.appendNextTargetId as string)
+  : null
+console.log(`ページ追加対象ドキュメントID=${documentId}, prevendChildTargetId=${prevendChildTargetId}, appendNextTargetId=${appendNextTargetId}`)
+
+const {
+  createPageSelectPosition,
+  createPagePrevendChild,
+  createPageAppendNext,
+} = usePage()
 
 const router = useRouter()
 
-const {
-  createPage,
-} = usePage()
-
 const register = async () => {
-  pageId.value = await createPage(documentId, editTitle.value, editData.value)
-  modal.value = true
+  if (prevendChildTargetId) {
+    const newPageId = await createPagePrevendChild(documentId, editTitle.value, editData.value, prevendChildTargetId)
+    await router.push(`/views/${documentId}/${newPageId}`)
+  } else if (appendNextTargetId) {
+    const newPageId = await createPageAppendNext(documentId, editTitle.value, editData.value, appendNextTargetId)
+    await router.push(`/views/${documentId}/${newPageId}`)
+  } else {
+    pageId.value = await createPageSelectPosition(documentId, editTitle.value, editData.value)
+    modal.value = true
+  }
 }
 
 const cancel = async () => {

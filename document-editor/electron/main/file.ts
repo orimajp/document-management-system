@@ -9,6 +9,7 @@ import { DocumentIndex, PageData, MenuData, } from '~~/models/storage'
 const DOCUMENT_INDEX_FILE_NAME = 'document.json'
 const CONTENT_FILE_NAME = 'content.json'
 const MENU_FILE_NAME = 'menu.json'
+type AppendResult = 'MATCH' | 'COMPLETE' | 'UNMATCH'
 
 /**
  * ドキュメントリスト取得
@@ -217,7 +218,23 @@ export const createPage = (event: IpcMainInvokeEvent, param: CreatePageParam) =>
       title: param.title,
       menus: [],
     }
-    menuDatas.menus.unshift(menuData)
+
+    if (param.prevendChildTargetId){
+      console.log('孫追加モード')
+      const result = prevendChileTargetNode(param.prevendChildTargetId, menuDatas, menuData)
+      if (!result) {
+        throw new Error(`追加ターゲットメニュー未発見 prevendChildTargetId=${param.prevendChildTargetId}`)
+      }
+    } else if (param.appendNextTargetId) {
+      console.log('隣追加モード')
+      const result = appendNextTargetNode(param.appendNextTargetId, menuDatas, menuData)
+      if (result == 'UNMATCH') {
+        throw new Error(`追加ターゲットメニュー未発見 appendNextTargetId=${param.appendNextTargetId}`)
+      }
+    } else {
+      console.log('トップ追加モード')
+      menuDatas.menus.unshift(menuData)
+    }
     fs.writeFileSync(menuDataPath, JSON.stringify(menuDatas, null, 2))
 
     // ページデータ書き込み (folder/documentId/pageId/content.json)
@@ -354,4 +371,54 @@ export const updateMenuData = (event: IpcMainInvokeEvent, param: UpdateMenuIntoP
   } catch (err) {
     console.log(err)
   }
+}
+
+const prevendChileTargetNode = (targetPageId: string, documenttNode: MenuInfo, newNode: MenuInfo): boolean => {
+  if (documenttNode.pageId === targetPageId) {
+    console.log('追加')
+    documenttNode.menus.unshift(newNode)
+    return true
+  }
+
+  for (const node of documenttNode.menus) {
+    const result = prevendChileTargetNode(targetPageId, node, newNode)
+    if (result) {
+      return  true
+    }
+  }
+
+  return false
+}
+
+const appendNextTargetNode = (targetPageId: string, documentNode: MenuInfo, newNode: MenuInfo): AppendResult => {
+  if (documentNode.pageId === targetPageId) {
+    return 'MATCH'
+  }
+
+  for (const node of documentNode.menus) {
+    const result = appendNextTargetNode(targetPageId, node, newNode)
+    if (result === 'COMPLETE') {
+      return 'COMPLETE'
+    }
+    if (result === 'MATCH') {
+      appendTargetNode(documentNode, node, newNode)
+      return 'COMPLETE'
+    }
+  }
+
+  return 'UNMATCH'
+}
+
+const appendTargetNode = (documentNode: MenuInfo, matchNode: MenuInfo, newNode: MenuInfo) => {
+  const newNodes = []
+
+  for (const node of documentNode.menus) {
+    newNodes.push(node)
+    if (node === matchNode) {
+      console.log('追加')
+      newNodes.push(newNode)
+    }
+  }
+
+  documentNode.menus = newNodes
 }
